@@ -24,12 +24,12 @@ namespace CoralConstants {
       kWristAngleMode
     };
     // wrist min/max positions
-    constexpr units::angle::degree_t kWristDegreeMin{50_deg};   // encoder Turns at the Floor's minimum usable position
+    constexpr units::angle::degree_t kWristDegreeMin{0_deg};   // encoder Turns at the Floor's minimum usable position
     constexpr units::angle::degree_t kWristDegreeMax{290_deg}; // meters the Floor is capable of moving 
     // for arm feed forward trig
     // arm position constants
     constexpr double kWristStartOffset = 0.0;
-    constexpr units::angle::degree_t kWristStartAngle{50_deg};
+    constexpr units::angle::degree_t kWristStartAngle{90_deg};
     // position deadzone
     constexpr units::angle::degree_t kWristAngleDeadzone{2_deg};
     // feed forward at max gravity i.e. 90 degrees off the floor
