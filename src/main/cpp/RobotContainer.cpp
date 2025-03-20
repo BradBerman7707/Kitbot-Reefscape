@@ -125,7 +125,7 @@ RobotContainer::RobotContainer() {
   mainDpadUp.OnTrue(SetAllKinematics(L4Pose));
 
   controller.A().OnTrue(SetAllKinematics(L2AlgaeDescore));  
-  controller.B().OnTrue(SetAllKinematics(L3AlgaeDescore));
+  controller.B().OnTrue(SetAllKinematics(L4Pose2));
 
 
   m_drive.SetDefaultCommand(frc2::cmd::Run(

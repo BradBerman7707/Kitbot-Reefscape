@@ -127,24 +127,28 @@ class RobotContainer {
 
   KinematicsPose L2Pose {
     0.92_m,
-    290.09_deg
+    76.5_deg
   };
 
   KinematicsPose L3Pose {
     1.25_m,
-    285.09_deg
+    76.5_deg
   };
   KinematicsPose L4Pose {
     1.79_m,
-    152.71_deg
+    110.5_deg
+  };
+  KinematicsPose L4Pose2 {
+    1.79_m,
+    150.5_deg
   };
   KinematicsPose L1Pose {
     1.0_m,
     46.03_deg
   };
   KinematicsPose CoralLoad {
-    0.92_m,
-    107.03_deg
+    0.96_m,
+    250_deg
   };
   KinematicsPose L2AlgaeDescore {
     0.92_m,

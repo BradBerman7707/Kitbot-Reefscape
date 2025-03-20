@@ -29,14 +29,14 @@ namespace CoralConstants {
     // for arm feed forward trig
     // arm position constants
     constexpr double kWristStartOffset = 0.0;
-    constexpr units::angle::degree_t kWristStartAngle{90_deg};
+    constexpr units::angle::degree_t kWristStartAngle{10_deg};
     // position deadzone
     constexpr units::angle::degree_t kWristAngleDeadzone{2_deg};
     // feed forward at max gravity i.e. 90 degrees off the floor
     constexpr double kMaxFeedForward = 0.352;
     // TalonFX config
     constexpr double kPWrist = 1.0;
-    constexpr double kWristRatio = (20.0 / 1.0) * (3.0 / 1.0); //Will change
+    constexpr double kWristRatio = (45.0 / 1.0) * (3.0 / 1.0); //Will change
     /*constexpr double kTurnsPerDegree = kWristRotorToGearbox * kWristGearboxToMechanism;*/
     constexpr double kTurnsPerDegree = kWristRatio / 360.0;
 }
