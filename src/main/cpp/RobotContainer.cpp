@@ -38,8 +38,9 @@ frc2::Command* RobotContainer::GetEmptyCommand() {
 
 RobotContainer::RobotContainer() {
   // Autonomous selector configuration
-  autonChooser.SetDefaultOption("None", "None");
-
+  autonChooser.SetDefaultOption("None", noneAuto.get());
+  autonChooser.AddOption("MoveOffLine", moveOffLine.get());
+  
   SmartDashboard::PutData(std::move(&autonChooser));  // send auton selector to Shuffleboard
 
   odomTrigger.WhileTrue(std::move(repeatOdom)); // trigger to handle odom updates from AprilTags
@@ -117,15 +118,15 @@ RobotContainer::RobotContainer() {
 
   controller.Y().OnTrue(std::move(toggleFieldCentric));
 
-  controller.Back().OnTrue(SetAllKinematics(CoralLoad));
-  controller.Start().OnTrue(SetAllKinematics(startingPose));
-  mainDpadDown.OnTrue(SetAllKinematics(L1Pose));  
-  mainDpadRight.OnTrue(SetAllKinematics(L2Pose));  
-  mainDpadLeft.OnTrue(SetAllKinematics(L3Pose));  
-  mainDpadUp.OnTrue(SetAllKinematics(L4Pose));
+  controller2.X().OnTrue(SetAllKinematics(CoralLoad));
+  controller2.Y().OnTrue(SetAllKinematics(startingPose));
+  coDpadDown.OnTrue(SetAllKinematics(L1Pose));  
+  coDpadRight.OnTrue(SetAllKinematics(L2Pose));  
+  coDpadLeft.OnTrue(SetAllKinematics(L3Pose));  
+  coDpadUp.OnTrue(SetAllKinematics(L4Pose));
 
-  controller.A().OnTrue(SetAllKinematics(L2AlgaeDescore));  
-  controller.B().OnTrue(SetAllKinematics(L4Pose2));
+  controller2.A().OnTrue(SetAllKinematics(L2AlgaeDescore));  
+  controller2.B().OnTrue(SetAllKinematics(L4Pose2));
 
 
   m_drive.SetDefaultCommand(frc2::cmd::Run(
@@ -179,7 +180,8 @@ RobotContainer::RobotContainer() {
   algae.SetDefaultCommand(frc2::cmd::Run(
     [this] {
       if(TrackingTarget == GlobalConstants::kAlgaeMode || TrackingTarget == GlobalConstants::kArbitrary) {
-        double power = controller.GetLeftTriggerAxis() - (controller.GetRightTriggerAxis()/2);
+        double power = controller.GetLeftTriggerAxis()/32.0 - (controller.GetRightTriggerAxis()/2);
+        //power = controller.GetLeftTriggerAxis() - (controller.GetRightTriggerAxis()/2);
         if(fabs(power) < 0.1) power = 0.0;
         algae.SetIntakePower(power);
       }
@@ -192,7 +194,8 @@ RobotContainer::RobotContainer() {
   coral.SetDefaultCommand(frc2::cmd::Run(
     [this] {
       if(TrackingTarget == GlobalConstants::kCoralMode || TrackingTarget == GlobalConstants::kArbitrary) {
-        double power = (controller.GetLeftTriggerAxis()/2.5) - controller.GetRightTriggerAxis();
+        double power = (controller.GetLeftTriggerAxis()/32.0) - controller.GetRightTriggerAxis();
+        //power = (controller.GetLeftTriggerAxis()/2.5) - controller.GetRightTriggerAxis();
         if(fabs(power) < 0.1) power = 0.0;
         coral.SetIntakePower(power);
       }
@@ -253,4 +256,8 @@ void RobotContainer::EnableTagTracking() {
 
 void RobotContainer::SetSlew(bool state) {
   m_drive.SetLimiting(state);
+}
+
+frc2::Command* RobotContainer::GetAutonomousCommand() {
+  return autonChooser.GetSelected();
 }

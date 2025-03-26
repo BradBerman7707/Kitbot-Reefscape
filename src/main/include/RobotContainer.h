@@ -66,7 +66,7 @@ class RobotContainer {
   /**
    * Return the command pointer to the autonomous command. 
    */
-  frc2::CommandPtr GetAutonomousCommand();
+  frc2::Command* GetAutonomousCommand();
   /**
    * Set the brake mode of most robot motors.
    */  
@@ -131,27 +131,27 @@ class RobotContainer {
   };
 
   KinematicsPose L3Pose {
-    1.25_m,
+    1.235_m,
     76.5_deg
   };
   KinematicsPose L4Pose {
     1.79_m,
-    110.5_deg
+    105.0_deg
   };
   KinematicsPose L4Pose2 {
     1.79_m,
     150.5_deg
   };
   KinematicsPose L1Pose {
-    1.0_m,
-    46.03_deg
+    0.92_m,
+    65.03_deg
   };
   KinematicsPose CoralLoad {
-    0.96_m,
-    250_deg
+    0.97_m,
+    242_deg
   };
   KinematicsPose L2AlgaeDescore {
-    0.92_m,
+    0.94_m,
     250_deg
   };
   KinematicsPose L3AlgaeDescore {
@@ -226,6 +226,62 @@ class RobotContainer {
   frc2::Trigger mainDpadDown{controller.POV(180)};
   frc2::Trigger mainDpadLeft{controller.POV(270)};
   frc2::Trigger mainDpadRight{controller.POV(90)};
+  frc2::Trigger coDpadUp{controller2.POV(0)};
+  frc2::Trigger coDpadDown{controller2.POV(180)};
+  frc2::Trigger coDpadLeft{controller2.POV(270)};
+  frc2::Trigger coDpadRight{controller2.POV(90)};
+  
+  frc2::CommandPtr noneAuto{frc2::cmd::None()};
+
+  frc2::CommandPtr moveOffLine{
+    frc2::cmd::Sequence(
+    frc2::cmd::RunOnce([this]() {
+      m_drive.ResetOdometry({7.145_m, 4.079_m, 180_deg});
+    }, {&m_drive}),
+        frc2::cmd::RunOnce([this]() {
+      m_drive.Drive({2.0_mps, 0_mps, 0.0_deg_per_s});
+    }, {&m_drive}),
+    frc2::cmd::Wait(1.5_s),
+    frc2::cmd::RunOnce([this]() {
+      m_drive.Drive({0.0_mps, 0_mps, 0.0_deg_per_s});
+    }, {&m_drive}),
+    frc2::cmd::RunOnce([this](){
+      coral.SetTargetAngle(65_deg);
+      }, {&cascade, &coral}),
+     frc2::cmd::Wait(1.0_s),
+     frc2::cmd::RunOnce([this](){
+       coral.SetIntakePower(0.1);
+       }, {&coral}),
+     frc2::cmd::Wait(2.0_s),
+     frc2::cmd::RunOnce([this](){
+       coral.SetIntakePower(0);
+       }, {&coral})
+    )};
+
+  // frc2::CommandPtr moveOffLine{
+  //   frc2::cmd::Sequence(
+  //   frc2::cmd::RunOnce([this]() {
+  //     m_drive.Drive({-2.0_mps, 0_mps, 90.0_deg_per_s});
+  //   }, {&m_drive}),
+  //   frc2::cmd::Wait(2.0_s),
+  //   frc2::cmd::RunOnce([this]() {
+  //     m_drive.Drive({0.0_mps, 0_mps, 0.0_deg_per_s});
+  //   }, {&m_drive}),
+    
+  //   frc2::cmd::RunOnce([this](){
+  //     coral.SetTargetAngle(L4_Pose);
+  //     }, {&cascade, &coral}),
+
+  //   frc2::cmd::Wait(1.0_s),
+  //   frc2::cmd::RunOnce([this](){
+  //     coral.SetIntakePower(0.1);
+  //     }, {&coral}),
+  
+  //   frc2::cmd::Wait(2.0_s),
+  //   frc2::cmd::RunOnce([this](){
+  //     coral.SetIntakePower(0);
+  //     }, {&coral})
+  //  )};
 
   frc2::Trigger driverTurning{[this]() {
       return abs(controller.GetRightX()) > DriveConstants::kTurnDeadzone && !controller2.A().Get();
@@ -258,6 +314,16 @@ class RobotContainer {
     }, {&m_drive})  
   };
 
+//  frc2::CommandPtr driveAuto{frc2::cmd::RunOnce([this] {
+//       m_drive.Drive({10_mps, 0_mps, 0_deg_per_s});
+//   }, {&m_drive})
+// };
+
+  frc2::CommandPtr driveAuto{frc2::cmd::Sequence(
+    frc2::cmd::RunOnce([this]() { // Reset to starting pose
+      m_drive.Drive({10_mps, 0_mps, 0_deg_per_s});
+  }, {&m_drive})
+    )};
   // funny rumble Commands
   frc2::CommandPtr rumblePrimaryOn{frc2::cmd::RunOnce([this] { controller.GetHID().SetRumble(GenericHID::kBothRumble, 1.0); },
                                         {})};
@@ -294,7 +360,7 @@ class RobotContainer {
   frc2::CommandPtr SetMultijoint(units::length::meter_t cascadeHeight, units::angle::degree_t algaeAngle);
 
   // The chooser for the autonomous routines
-  frc::SendableChooser<std::string> autonChooser;
-  // frc::SendableChooser<frc2::Command*> autonChooser;
+  // frc::SendableChooser<std::string> autonChooser;
+  frc::SendableChooser<frc2::Command*> autonChooser;
   frc2::Command* currentAuton;
 };

@@ -33,6 +33,8 @@ namespace DriveConstants {
     constexpr int kFrontRightEncoderPort = 0;
     
     constexpr double kBLeftMagPos = 0.505863762646594;
+
+    
     constexpr double kFLeftMagPos = 0.253170756329269;
     constexpr double kBRightMagPos = 0.847834921195873 - 0.5;
     constexpr double kFRightMagPos = 0.882721822068046;
@@ -64,7 +66,7 @@ namespace DriveConstants {
     // drivetrain controller constants
     constexpr double kDriveDeadzone = 0.2;
     constexpr double kTurnDeadzone = 0.1;
-    constexpr double kDriveCurveExtent = 0.6;
+    constexpr double kDriveCurveExtent = 0.8;
     constexpr auto kDriveAccelerationLimit = 9.0_mps_sq;
     constexpr auto kDriveDecelerationLimit = 7.0_mps_sq;
     constexpr auto kDriveTranslationLimit = 3.3_mps;

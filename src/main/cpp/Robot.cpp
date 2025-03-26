@@ -1,5 +1,3 @@
-//# PINEAPPLES # LED Robotics 6722 Wendell Krinn Technical High School (Grades 09-12) partnered with Marchman Technical College, PHSC, FLVS, and eSchool <3
-
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -8,11 +6,13 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandScheduler.h>
+#include <cameraserver/CameraServer.h>
 
 void Robot::RobotInit() {
   m_container.SetDriveBrakes(false);
+  frc::CameraServer::StartAutomaticCapture();
   // m_container.ZeroSwerve();
-  // SmartDashboard::PutNumber("silly pineapples at", 69);
+  
 }
 
 /**
@@ -46,17 +46,16 @@ void Robot::DisabledPeriodic() {
  */
 void Robot::AutonomousInit() {
   // m_container.DisableTagTracking();   // auton uses odom relative to start, not based on AprilTags
-  // m_autonomousCommand = m_container.GetAutonomousCommand();
+  m_autonomousCommand = m_container.GetAutonomousCommand();
   m_container.SetDriveBrakes(true);
   m_container.SetSlew(false);
   // m_container.SetAutoIndex(true);
   // if(DriverStation::IsFMSAttached()) {
   //   m_container.SetRecording(true);
   // }
-  // if(m_autonomousCommand) {
-  //   m_autonomousCommand->Schedule();
-  // }
-  // frc2::CommandScheduler::GetInstance().Schedule(m_autonomousCommand);
+  if(m_autonomousCommand.has_value()) {
+    frc2::CommandScheduler::GetInstance().Schedule(m_autonomousCommand.value());
+  }
   // frc2::CommandScheduler::GetInstance().Schedule(m_autonomousCommand.get());
   // m_autonomousCommand->Schedule();
 }
